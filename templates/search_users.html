@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block title %} User Search {% endblock %}
+
+{% block content %}
+<!-- Main -->
+
+<div class="container text-center">
+    <h1 class="display-4 text-center my-5">Search Result for query - "{{query}}"</h1>
+
+    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 mx-3">
+        {% if users|length == 0 %}
+            <div class="col-lg-4 position-relative mb-4">
+                <h2 class="text-danger text-center">
+                    No users related to this query
+                </h2>
+            </div>
+        {% else %}
+            {% for user in users %}
+            <div class="col-lg-4 position-relative mb-4">
+                <img src="{{user.profile.profile_img.url}}" class="img-fluid" alt="" width="150" height="150">
+
+                <h2 class="fw-normal">{{user.username}}</h2>
+                <p>
+                    {{user.profile.bio|truncatewords:5}}
+                </p>
+                <p><a class="btn btn-secondary" href="{% url 'profile' user.username %}">View Profile »</a></p>
+            </div>
+            <!-- /.col-lg-4 -->
+            {% endfor %}
+        {% endif %}
+    </div>
+    <!-- /.row -->
+</div>
+{% endblock %}

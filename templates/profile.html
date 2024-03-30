@@ -1,0 +1,82 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block title %} 
+
+{{ user_profile2.user.username }}
+
+{% endblock %}
+
+{% block content %}
+<h1 class="display-5 text-center my-2">Profile</h1>
+    {% include 'components/alerts.html' %}
+    <div class="container text-center">
+        {% if request.user.username == user_profile2.user.username %}
+            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                <a href="{% url 'editProfile' %}" type="button" class="btn btn-outline-primary">Edit</a>
+                <a href="{% url 'delProfile' %}" type="button" class="btn btn-outline-danger">Delete</a>
+            </div>
+        {% endif %}
+
+        <div class="user-info">
+            <div class="container text-center my-4">
+                <div class="row row-cols-sm-1 row-cols-md-2">
+                    <div class="col-12">
+                        <img class='rounded-circle' src="{{ user_profile2.profile_img.url }}" alt="" width="150" height="150">
+                        <h2 class="fs-3">{{ user_profile2.user.username }}</h2>
+                    </div>
+                    <div class="col-12">
+                        <h2>{{user_profile2.user.first_name|default:"Full Name not Available"}} {{user_profile2.user.last_name}}</h2>
+                        <p class="fs-5">
+                            <i class="bi bi-gender-ambiguous"></i> {{ user_profile2.gender|default:'Gender not Available' }}
+                        </p>
+                        <p class="fs-5">
+                            <i class="bi bi-geo-alt-fill"></i> {{ user_profile2.location|default:'Location not Available' }}
+                        </p>
+                        <p class="fs-5">
+                            <i class="bi bi-file-person"></i> {{ user_profile2.bio|default:'Bio not Available' }}
+                        </p>
+
+                        {% if request.user.is_superuser %}
+                            <p class="fs-5">
+                                <i class="bi bi-envelope-at"></i> <a href="mailto:{{user_profile2.user.email}}">{{ user_profile2.user.email|default:'Email not Available' }}</a> 
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-5">
+
+        <div class="container">
+            <div class="row row-cols-sm-1 row-cols-md-1 row-cols-lg-1">
+                <div class="col-12">
+                    <h3>Quiz Attended</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Quiz</th>
+                                <th scope="col">Marks</th>
+                                <th scope="col">Submit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for quiz in submissions %}
+                            <tr>
+                                <th scope="row">{{forloop.counter}}</th>
+                                <td title="{{quiz.quiz.title}}">{{quiz.quiz.title|truncatewords:4}}</td>
+                                <td>{{quiz.score}}/{{quiz.quiz.question_set.all|length}}</td>
+                                <td>{{quiz.submitted_at|timesince}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
