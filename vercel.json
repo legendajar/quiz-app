@@ -3,17 +3,19 @@
   "builds": [
     {
       "src": "quizapp/wsgi.py",
-      "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+      "use": "@vercel/python"
     },
     {
       "src": "build_files.sh",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "staticfiles"
+        "distDir": "staticfiles_build"
       }
     }
   ],
+  "env" : {
+    "PYTHON_VERSION": "3.9"
+  },
   "routes": [
     {
       "src": "/static/(.*)",
